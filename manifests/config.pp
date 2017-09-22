@@ -7,11 +7,12 @@ class splunkforwarder::config(
   String $port         = $::splunkforwarder::port,
   String $local_server = $::splunkforwarder::local_server,
   String $config_dir   = $::splunkforwarder::config_dir,
+  String $ensure       = $::splunkforwarder::config_ensure,
   String $owner        = $::splunkforwarder::config_owner,
   String $group        = $::splunkforwarder::config_group,
   ) {
   File {
-    ensure => 'present',
+    ensure => $ensure,
     owner  => $owner,
     group  => $group,
   }

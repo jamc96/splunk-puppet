@@ -9,6 +9,7 @@ class splunkforwarder::params {
   $local_server       = $::hostname
   $config_dir         = '/opt/splunkforwarder/etc/system/local'
   $user               = 'splunk'
+  $config_ensure      = 'present'
   $config_owner       = 'splunk'
   $config_group       = 'splunk'
   $service_ensure     = 'running'
