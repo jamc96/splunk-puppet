@@ -7,9 +7,11 @@ class splunkforwarder::config(
   String $port         = $::splunkforwarder::port,
   String $local_server = $::splunkforwarder::local_server,
   String $config_dir   = $::splunkforwarder::config_dir,
+  String $run_dir      = $::splunkforwarder::run_dir,
   String $ensure       = $::splunkforwarder::config_ensure,
   String $owner        = $::splunkforwarder::config_owner,
   String $group        = $::splunkforwarder::config_group,
+  String $pid_selinux  = $::splunkforwarder::pid_selinux,
   ) {
   File {
     ensure => $ensure,
@@ -30,5 +32,8 @@ class splunkforwarder::config(
     'limits.conf':
     path    => "${config_dir}/limits.conf",
     content => template('splunkforwarder/conf.d/limits.conf.erb');
+    'splunkd.pid':
+    path    => "${run_dir}/splunk/splunkd.pid",
+    selinux => $pid_selinux,
   }
 }

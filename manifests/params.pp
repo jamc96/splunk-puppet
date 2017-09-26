@@ -7,11 +7,14 @@ class splunkforwarder::params {
   $server             = 'splunk'
   $port               = '9997'
   $local_server       = $::hostname
-  $config_dir         = '/opt/splunkforwarder/etc/system/local'
+  $home_dir           = '/opt/splunkforwarder'
+  $config_dir         = "${home_dir}/etc/system/local"
+  $run_dir            = "${home_dir}/var/run"
   $user               = 'splunk'
   $config_ensure      = 'present'
   $config_owner       = 'splunk'
   $config_group       = 'splunk'
+  $pid_selinux        = 'unconfined_u'
   $service_ensure     = 'running'
   $service_enable     = true
   $service_hasstatus  = true
