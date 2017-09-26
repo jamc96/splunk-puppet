@@ -3,6 +3,7 @@
 # This class is called from splunkforwarder for service config.
 #
 class splunkforwarder::config(
+  String $splunk_user  = $::splunkforwarder::user,
   String $server       = $::splunkforwarder::server,
   String $port         = $::splunkforwarder::port,
   String $local_server = $::splunkforwarder::local_server,
@@ -39,5 +40,12 @@ class splunkforwarder::config(
     creates => '/opt/splunkforwarder/etc/auth/server.pem',
     timeout => 0,
     require => Class['::splunkforwarder::install'],
+  }
+  # Creating the splunk service init file 
+  exec { 'enable_splunkforwarder':
+    path    => "${home_dir}/bin",
+    command => "splunk enable boot-start -user ${splunk_user}",
+    creates => '/etc/init.d/splunk',
+    require => Exec['splunkforwarder_license'],
   }
 }
