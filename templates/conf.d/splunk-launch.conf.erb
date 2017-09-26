@@ -10,8 +10,7 @@ SPLUNK_HOME=<%= @home_dir %>
 # By default, Splunk stores its indexes under SPLUNK_HOME in the
 # var/lib/splunk subdirectory.  This can be overridden
 # here:
-#
-<% if @enable_db %>
+# <% if @enable_db %>
 SPLUNK_DB=<%= @database%>
 <% else %>
 # SPLUNK_DB=/home/build/build-home/ivory/var/lib/splunk
