@@ -9,8 +9,9 @@ class splunkforwarder::service(
     Boolean $service_enable     = $::splunkforwarder::service_enable,
     Boolean $service_hasstatus  = $::splunkforwarder::service_hasstatus,
     Boolean $service_hasrestart = $::splunkforwarder::service_hasrestart,
+    String $run_dir             = $::splunkforwarder::run_dir,
+    String $pid_selinux         = $::splunkforwarder::pid_selinux,
   ) {
-
   service { $service_name:
     ensure     => $service_ensure,
     enable     => $service_enable,

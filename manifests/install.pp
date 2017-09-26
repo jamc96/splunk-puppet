@@ -8,7 +8,6 @@ class splunkforwarder::install(
   $package_source   = $::splunkforwarder::source_root,
   $package_provider = $::splunkforwarder::package_provider,
   ) {
-
   package { $package_name:
     ensure   => $package_ensure,
     source   => $package_source,

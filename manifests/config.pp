@@ -7,11 +7,10 @@ class splunkforwarder::config(
   String $port         = $::splunkforwarder::port,
   String $local_server = $::splunkforwarder::local_server,
   String $config_dir   = $::splunkforwarder::config_dir,
-  String $run_dir      = $::splunkforwarder::run_dir,
   String $ensure       = $::splunkforwarder::config_ensure,
   String $owner        = $::splunkforwarder::config_owner,
   String $group        = $::splunkforwarder::config_group,
-  String $pid_selinux  = $::splunkforwarder::pid_selinux,
+  String $home_dir     = $::splunkforwarder::home_dir,
   ) {
   File {
     ensure => $ensure,
@@ -32,8 +31,13 @@ class splunkforwarder::config(
     'limits.conf':
     path    => "${config_dir}/limits.conf",
     content => template('splunkforwarder/conf.d/limits.conf.erb');
-    'splunkd.pid':
-    path    => "${run_dir}/splunk/splunkd.pid",
-    seluser => $pid_selinux,
+  }
+  # Enable splunkforwarder
+  exec { 'splunkforwarder_license':
+    path    => "${home_dir}/bin"
+    command => 'splunk start --accept-license --answer-yes --no-prompt',
+    creates => '/opt/splunkforwarder/etc/auth/server.pem',
+    timeout => 0,
+    require => Class['::splunkforwarder::install'],
   }
 }
