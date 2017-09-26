@@ -44,6 +44,8 @@
 #
 class splunkforwarder (
   String $package_name        = $splunkforwarder::params::package_name,
+  String $package_ensure      = $splunkforwarder::params::package_ensure,
+  String $package_provider    = $splunkforwarder::params::package_provider,
   String $source_root         = $splunkforwarder::params::source_root,
   String $user                = $splunkforwarder::params::user,
   String $port                = $splunkforwarder::params::port,
