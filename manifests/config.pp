@@ -34,6 +34,6 @@ class splunkforwarder::config(
     content => template('splunkforwarder/conf.d/limits.conf.erb');
     'splunkd.pid':
     path    => "${run_dir}/splunk/splunkd.pid",
-    selinux => $pid_selinux,
+    seluser => $pid_selinux,
   }
 }
