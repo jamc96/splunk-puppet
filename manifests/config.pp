@@ -34,7 +34,7 @@ class splunkforwarder::config(
   }
   # Enable splunkforwarder
   exec { 'splunkforwarder_license':
-    path    => "${home_dir}/bin"
+    path    => "${home_dir}/bin",
     command => 'splunk start --accept-license --answer-yes --no-prompt',
     creates => '/opt/splunkforwarder/etc/auth/server.pem',
     timeout => 0,
