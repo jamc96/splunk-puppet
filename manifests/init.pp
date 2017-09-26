@@ -50,6 +50,7 @@ class splunkforwarder (
   String $user                = $splunkforwarder::params::user,
   String $port                = $splunkforwarder::params::port,
   String $server              = $splunkforwarder::params::server,
+  String $version             = $splunkforwarder::params::version,
   String $local_server        = $splunkforwarder::params::local_server,
   String $home_dir            = $splunkforwarder::params::home_dir,
   String $config_dir          = $splunkforwarder::params::config_dir,
@@ -63,6 +64,9 @@ class splunkforwarder (
   Boolean $service_enable     = $splunkforwarder::params::service_enable,
   Boolean $service_hasstatus  = $splunkforwarder::params::service_hasstatus,
   Boolean $service_hasrestart = $splunkforwarder::params::service_hasrestart,
+  String $web_name            = $splunkforwarder::params::web_name,
+  String $database            = $splunkforwarder::params::database,
+  Boolean $enable_db          = $splunkforwarder::params::enable_db,
   ) inherits splunkforwarder::params {
 
   class { '::splunkforwarder::install': } ->

@@ -4,8 +4,9 @@
 # It sets variables according to platform.
 #
 class splunkforwarder::params {
-  $server             = 'splunk'
+  $server             = 'splunkforwarder'
   $port               = '9997'
+  $version            = '6.5.1'
   $local_server       = $::hostname
   $home_dir           = '/opt/splunkforwarder'
   $config_dir         = "${home_dir}/etc/system/local"
@@ -21,6 +22,9 @@ class splunkforwarder::params {
   $service_hasrestart = true
   $package_ensure     = 'present'
   $package_provider   = 'rpm'
+  $web_name           = 'splunkweb'
+  $database           = '/home/build/build-home/ivory/var/lib/splunk'
+  $enable_db          = false
   case $::osfamily {
     'Debian': {
       $package_name = 'splunkforwarder'

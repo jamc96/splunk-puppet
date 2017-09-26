@@ -12,6 +12,11 @@ class splunkforwarder::config(
   String $owner        = $::splunkforwarder::config_owner,
   String $group        = $::splunkforwarder::config_group,
   String $home_dir     = $::splunkforwarder::home_dir,
+  String $user         = $::splunkforwarder::user,
+  String $version      = $::splunkforwarder::version,
+  String $web_name     = $::splunkforwarder::web_name,
+  String $database     = $::splunkforwarder::database,
+  Boolean $enable_db   = $::splunkforwarder::enable_db,
   ) {
   File {
     ensure => $ensure,
@@ -32,6 +37,9 @@ class splunkforwarder::config(
     'limits.conf':
     path    => "${config_dir}/limits.conf",
     content => template('splunkforwarder/conf.d/limits.conf.erb');
+    'splunk-launch.conf':
+    path    => "${home_dir}/etc/splunk-launch.conf",
+    content => template('splunkforwarder/conf.d/splunk-launch.conf.erb');
   }
   # Enable splunkforwarder
   exec { 'splunkforwarder_license':
@@ -41,7 +49,7 @@ class splunkforwarder::config(
     timeout => 0,
     require => Class['::splunkforwarder::install'],
   }
-  # Creating the splunk service init file 
+  # Creating the splunk service init file
   exec { 'enable_splunkforwarder':
     path    => "${home_dir}/bin",
     command => "splunk enable boot-start -user ${splunk_user}",
