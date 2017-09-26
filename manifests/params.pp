@@ -19,8 +19,8 @@ class splunkforwarder::params {
   $service_enable     = true
   $service_hasstatus  = true
   $service_hasrestart = true
-  $package_ensure     = 'present',
-  $package_provider   = 'rpm',
+  $package_ensure     = 'present'
+  $package_provider   = 'rpm'
   case $::osfamily {
     'Debian': {
       $package_name = 'splunkforwarder'
