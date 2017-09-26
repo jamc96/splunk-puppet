@@ -25,21 +25,21 @@ class splunkforwarder::config(
   }
   file { 'inputs.conf':
     path    => "${config_dir}/inputs.conf",
-    content => template('splunkforwarder/conf.d/inputs.conf.erb');
+    content => template("${module_name}/conf.d/inputs.conf.erb");
     'outputs.conf':
     path    => "${config_dir}/outputs.conf",
-    content => template('splunkforwarder/conf.d/outputs.conf.erb');
+    content => template("${module_name}/conf.d/outputs.conf.erb");
     'server.conf':
     path    => "${config_dir}/server.conf";
     'web.conf':
     path    => "${config_dir}/web.conf",
-    content => template('splunkforwarder/conf.d/web.conf.erb');
+    content => template("${module_name}/conf.d/web.conf.erb");
     'limits.conf':
     path    => "${config_dir}/limits.conf",
-    content => template('splunkforwarder/conf.d/limits.conf.erb');
+    content => template("${module_name}/conf.d/limits.conf.erb");
     'splunk-launch.conf':
     path    => "${home_dir}/etc/splunk-launch.conf",
-    content => template('splunkforwarder/conf.d/splunk-launch.conf.erb');
+    content => template("${module_name}/conf.d/splunk-launch.conf.erb");
   }
   # Enable splunkforwarder
   exec { 'splunkforwarder_license':
