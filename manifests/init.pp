@@ -75,6 +75,5 @@ class splunkforwarder (
 
   class { '::splunkforwarder::install': } ->
   class { '::splunkforwarder::config': } ~>
-  class { '::splunkforwarder::service': } ->
-  Class['::splunkforwarder']
+  class { '::splunkforwarder::service': }
 }
