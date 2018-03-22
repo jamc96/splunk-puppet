@@ -72,6 +72,7 @@ class splunkforwarder (
   contain splunkforwarder::install
   contain splunkforwarder::config
   contain splunkforwarder::service
+  contain splunkforwarder::params
 
   Class['::splunkforwarder::install']
   -> Class['::splunkforwarder::config']
