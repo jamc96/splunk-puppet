@@ -69,6 +69,10 @@ class splunkforwarder (
   Boolean $enable_db          = $splunkforwarder::params::enable_db,
   ) inherits splunkforwarder::params {
 
+  contain splunkforwarder::install
+  contain splunkforwarder::config
+  contain splunkforwarder::service
+
   class { '::splunkforwarder::install': } ->
   class { '::splunkforwarder::config': } ~>
   class { '::splunkforwarder::service': } ->
