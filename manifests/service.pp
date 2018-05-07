@@ -4,8 +4,8 @@
 # It ensure the service is running.
 #
 class splunkforwarder::service(
-    String $service_name        = $::splunkforwarder::service_name,
-    String $service_ensure      = $::splunkforwarder::service_ensure,
+  $service_name        = $::splunkforwarder::service_name,
+  $service_ensure      = $::splunkforwarder::service_ensure,
   ) {
   service { $service_name:
     ensure     => $service_ensure,
