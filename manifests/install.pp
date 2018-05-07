@@ -9,7 +9,7 @@ class splunkforwarder::install(
   ) {
   package { $package_name:
     ensure   => $package_ensure,
-    source   => "/tmp/${package_name}.rpm",
+    source   => $package_source,
     provider => 'rpm',
   }
 }
