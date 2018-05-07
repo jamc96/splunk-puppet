@@ -61,7 +61,7 @@ class splunkforwarder (
   String $database            = '/home/build/build-home/ivory/var/lib/splunk',
   Boolean $enable_db          = false,
   String $source_root         = "/tmp/${package_name}.rpm",
-  Array $log_files           = ['audit','btool','conf','splunkd','metrics','splunkd_access','mongod','scheduler']
+  Array $log_files           = ['audit','btool','conf','splunkd','splunkd_access','mongod','scheduler']
   ){
   # module containment
   contain ::splunkforwarder::install
