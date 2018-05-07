@@ -43,37 +43,30 @@
 # Copyright 2017 Your name here, unless otherwise noted.
 #
 class splunkforwarder (
-  String $package_name        = $splunkforwarder::params::package_name,
-  String $package_ensure      = $splunkforwarder::params::package_ensure,
-  String $package_provider    = $splunkforwarder::params::package_provider,
-  String $source_root         = $splunkforwarder::params::source_root,
-  String $user                = $splunkforwarder::params::user,
-  String $port                = $splunkforwarder::params::port,
-  String $server              = $splunkforwarder::params::server,
-  String $version             = $splunkforwarder::params::version,
-  String $local_server        = $splunkforwarder::params::local_server,
-  String $home_dir            = $splunkforwarder::params::home_dir,
-  String $config_dir          = $splunkforwarder::params::config_dir,
-  String $run_dir             = $splunkforwarder::params::run_dir,
-  String $pid_selinux         = $splunkforwarder::params::pid_selinux,
-  String $config_ensure       = $splunkforwarder::params::config_ensure,
-  String $config_owner        = $splunkforwarder::params::config_owner,
-  String $config_group        = $splunkforwarder::params::config_group,
-  String $service_name        = $splunkforwarder::params::service_name,
-  String $service_ensure      = $splunkforwarder::params::service_ensure,
-  Boolean $service_enable     = $splunkforwarder::params::service_enable,
-  Boolean $service_hasstatus  = $splunkforwarder::params::service_hasstatus,
-  Boolean $service_hasrestart = $splunkforwarder::params::service_hasrestart,
-  String $web_name            = $splunkforwarder::params::web_name,
-  String $database            = $splunkforwarder::params::database,
-  Boolean $enable_db          = $splunkforwarder::params::enable_db,
-  ) inherits splunkforwarder::params {
-
-  contain splunkforwarder::install
-  contain splunkforwarder::config
-  contain splunkforwarder::service
-  contain splunkforwarder::params
-
+  String $package_name        = 'splunkforwarder',
+  String $package_ensure      = 'present',
+  String $user                = 'splunk',
+  String $port                = '9997',
+  String $server              = 'splunkforwarder',
+  String $version             = '6.5.1',
+  String $local_server        = $::hostname,
+  String $home_dir            = '/opt/splunkforwarder',
+  String $config_dir          = "${home_dir}/etc/system/local",
+  String $run_dir             = "${home_dir}/var/run",
+  String $log_dir             = "${home_dir}/var/log/splunk",
+  String $config_ensure       = 'present',
+  String $service_name        = 'splunk',
+  String $service_ensure      = 'running',
+  String $web_name            = 'splunkweb',
+  String $database            = '/home/build/build-home/ivory/var/lib/splunk',
+  Boolean $enable_db          = false,
+  String $log_files           = ['audit','btool','conf','splunkd','metrics','splunkd_access','mongod','scheduler']
+  ){
+  # module containment
+  contain ::splunkforwarder::install
+  contain ::splunkforwarder::config
+  contain ::splunkforwarder::service
+  # module relationship
   Class['::splunkforwarder::install']
   -> Class['::splunkforwarder::config']
   ~> Class['::splunkforwarder::service']

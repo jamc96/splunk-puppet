@@ -3,25 +3,26 @@
 # This class is called from splunkforwarder for service config.
 #
 class splunkforwarder::config(
-  String $splunk_user  = $::splunkforwarder::user,
-  String $server       = $::splunkforwarder::server,
-  String $port         = $::splunkforwarder::port,
-  String $local_server = $::splunkforwarder::local_server,
-  String $config_dir   = $::splunkforwarder::config_dir,
-  String $ensure       = $::splunkforwarder::config_ensure,
-  String $owner        = $::splunkforwarder::config_owner,
-  String $group        = $::splunkforwarder::config_group,
-  String $home_dir     = $::splunkforwarder::home_dir,
-  String $user         = $::splunkforwarder::user,
-  String $version      = $::splunkforwarder::version,
-  String $web_name     = $::splunkforwarder::web_name,
-  String $database     = $::splunkforwarder::database,
-  Boolean $enable_db   = $::splunkforwarder::enable_db,
+  String $splunk_user   = $::splunkforwarder::user,
+  String $server        = $::splunkforwarder::server,
+  String $port          = $::splunkforwarder::port,
+  String $local_server  = $::splunkforwarder::local_server,
+  String $config_dir    = $::splunkforwarder::config_dir,
+  String $config_ensure = $::splunkforwarder::config_ensure,
+  String $home_dir      = $::splunkforwarder::home_dir,
+  String $user          = $::splunkforwarder::user,
+  String $version       = $::splunkforwarder::version,
+  String $web_name      = $::splunkforwarder::web_name,
+  String $database      = $::splunkforwarder::database,
+  Boolean $enable_db    = $::splunkforwarder::enable_db,
+  String $log_dir       = $::splunkforwarder::log_dir,
+  String $log_files     = $::splunkforwarder::log_files,
   ) {
   File {
-    ensure => $ensure,
-    owner  => $owner,
-    group  => $group,
+    ensure                  => $config_ensure,
+    owner                   => 'splunk',
+    group                   => 'splunk',
+    selinux_ignore_defaults => true,
   }
   file { 'inputs.conf':
     path    => "${config_dir}/inputs.conf",
@@ -40,6 +41,13 @@ class splunkforwarder::config(
     'splunk-launch.conf':
     path    => "${home_dir}/etc/splunk-launch.conf",
     content => template("${module_name}/conf.d/splunk-launch.conf.erb");
+  }
+  # Permissions for log files 
+  $log_files.each |String $files|{
+    file{ $files:
+      path => "${log_dir}/${files}.log",
+      mode => '0775',
+    }
   }
   # Enable splunkforwarder
   exec { 'splunkforwarder_license':
