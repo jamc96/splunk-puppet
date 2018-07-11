@@ -1,6 +1,9 @@
 require 'spec_helper'
 describe 'splunkforwarder' do
-  context 'with default values for all parameters' do
-    it { should contain_class('splunkforwarder') }
+  context 'with default parameters' do
+    
+    # compilation checking
+    it { is_expected.to compile }
+    it { is_expected.to compile.with_all_deps }
   end
 end
