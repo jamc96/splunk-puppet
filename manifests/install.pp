@@ -2,14 +2,11 @@
 #
 # This class is called from splunkforwarder for install.
 #
-class splunkforwarder::install(
-  $package_name     = $::splunkforwarder::package_name,
-  $package_ensure   = $::splunkforwarder::package_ensure,
-  $package_source   = $::splunkforwarder::source_root,
-  ) {
-  package { $package_name:
-    ensure   => $package_ensure,
-    source   => $package_source,
+class splunkforwarder::install inherits splunkforwarder {
+  # splunk package
+  package { $splunkforwarder::package_name:
+    ensure   => $splunkforwarder::package_ensure,
+    source   => $splunkforwarder::source_root,
     provider => 'rpm',
   }
 }
