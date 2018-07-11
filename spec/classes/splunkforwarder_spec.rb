@@ -52,19 +52,19 @@ describe 'splunkforwarder' do
         .with_content(%r{^SPLUNK_OS_USER[=]?[a-z]+$}) \
     }
     it { is_expected.to contain_file(log_dir).with_ensure('directory') }
-    ['audit','btool','conf','splunkd','splunkd_access','mongod','scheduler'].each do |key| 
-      it { 
+    ['audit', 'btool', 'conf', 'splunkd', 'splunkd_access', 'mongod', 'scheduler'].each do |key|
+      it {
         is_expected.to contain_file(key).with(
           ensure: 'present',
           owner: 'splunk',
           group: 'splunk',
           path: "#{log_dir}/#{key}.log",
           mode: '0775',
-          require: "File[#{log_dir}]"
+          require: "File[#{log_dir}]",
         )
       }
     end
-    it { 
+    it {
       is_expected.to contain_exec('splunkforwarder_license').with(
         path: "#{home_path}/bin",
         command: 'splunk start --accept-license --answer-yes --no-prompt',
@@ -72,12 +72,12 @@ describe 'splunkforwarder' do
         timeout: 0,
       )
     }
-    it { 
+    it {
       is_expected.to contain_exec('enable_splunkforwarder').with(
         path: "#{home_path}/bin",
         command: 'splunk enable boot-start -user splunk',
         creates: '/etc/init.d/splunk',
-        require: 'Exec[splunkforwarder_license]'
+        require: 'Exec[splunkforwarder_license]',
       )
     }
     it { is_expected.to contain_service('splunk').with(ensure: 'running', enable: true) }

@@ -13,32 +13,32 @@ class splunkforwarder::config inherits splunkforwarder {
   # main config files
   ['inputs.conf', 'outputs.conf', 'web.conf', 'limits.conf'].each |$key| {
     file { $key:
-      path => "${config_dir}/${key}",
-      content => template("${module_name}/conf.d/${key}.erb")
+      path    => "${splunkforwarder::config_dir}/${key}",
+      content => template("${module_name}/conf.d/${key}.erb"),
     }
   }
   file {
     'server.conf':
-      path    => "${config_dir}/server.conf";
+      path  => "${splunkforwarder::config_dir}/server.conf";
     'splunk-launch.conf':
-      path    => "${home_dir}/etc/splunk-launch.conf",
+      path    => "${splunkforwarder::home_dir}/etc/splunk-launch.conf",
       content => template("${module_name}/conf.d/splunk-launch.conf.erb");
   }
   # Log directory
-  file { $splunkforwarder::log_dir: 
+  file { $splunkforwarder::log_dir:
     ensure => directory,
   }
   # log files
   ['audit','btool','conf','splunkd','splunkd_access','mongod','scheduler'].each |String $files| {
     file{ $files:
-      path => "${log_dir}/${files}.log",
-      mode => '0775',
-      require => File[$log_dir],
+      path    => "${splunkforwarder::log_dir}/${files}.log",
+      mode    => '0775',
+      require => File[$splunkforwarder::log_dir],
     }
   }
   # enable splunkforwarder
   exec { 'splunkforwarder_license':
-    path    => "${home_dir}/bin",
+    path    => "${splunkforwarder::home_dir}/bin",
     command => 'splunk start --accept-license --answer-yes --no-prompt',
     creates => '/opt/splunkforwarder/etc/auth/server.pem',
     timeout => 0,
@@ -46,8 +46,8 @@ class splunkforwarder::config inherits splunkforwarder {
   }
   # create init file
   exec { 'enable_splunkforwarder':
-    path    => "${home_dir}/bin",
-    command => "splunk enable boot-start -user ${user}",
+    path    => "${splunkforwarder::home_dir}/bin",
+    command => "splunk enable boot-start -user ${splunkforwarder::user}",
     creates => '/etc/init.d/splunk',
     require => Exec['splunkforwarder_license'],
   }
