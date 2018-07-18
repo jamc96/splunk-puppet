@@ -10,13 +10,9 @@ class splunkforwarder::config inherits splunkforwarder {
     group                   => $splunkforwarder::group,
     selinux_ignore_defaults => true,
   }
-  # directories
-  file {
-    $splunkforwarder::home_dir:
-      ensure => $splunkforwarder::directory_ensure;
-    $splunkforwarder::log_dir:
-      ensure  => $splunkforwarder::directory_ensure,
-      require => File[$splunkforwarder::home_dir];
+  # main directory
+  file {  $splunkforwarder::home_dir:
+      ensure => $splunkforwarder::directory_ensure,
   }
   file {
     "${splunkforwarder::config_dir}/server.conf":
@@ -39,6 +35,11 @@ class splunkforwarder::config inherits splunkforwarder {
     path    => "${splunkforwarder::home_dir}/bin",
     command => "splunk enable boot-start -user ${splunkforwarder::user}",
     creates => '/etc/init.d/splunk',
+  }
+  # log directory
+  file { $splunkforwarder::log_dir:
+    ensure  => $splunkforwarder::directory_ensure,
+    require => Exec['splunkforwarder_license'],
   }
   # main config files
   ['inputs.conf', 'outputs.conf', 'web.conf', 'limits.conf'].each |$key| {
