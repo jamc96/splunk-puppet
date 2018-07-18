@@ -5,7 +5,7 @@
 #
 class splunkforwarder::service inherits splunkforwarder {
   # splunk service
-  service { $splunkforwarder::service_name:
+  service { 'splunk':
     ensure     => $splunkforwarder::service_ensure,
     enable     => true,
     hasstatus  => true,
