@@ -30,6 +30,22 @@ describe 'splunkforwarder' do
         provider: 'rpm',
       )
     }
+    it {
+      is_expected.to contain_exec('splunkforwarder_license').with(
+        path: "#{home_path}/bin",
+        command: 'splunk start --accept-license --answer-yes --no-prompt',
+        creates: '/opt/splunkforwarder/etc/auth/server.pem',
+        timeout: 0,
+      )
+    }
+    it {
+      is_expected.to contain_exec('enable_splunkforwarder').with(
+        path: "#{home_path}/bin",
+        command: 'splunk enable boot-start -user splunk',
+        creates: '/etc/init.d/splunk',
+        require: 'Exec[splunkforwarder_license]',
+      )
+    }
     it { is_expected.to contain_file(home_path).with_ensure('directory') }
     it { is_expected.to contain_file(log_dir).with_ensure('directory') }
     config_files.each do |key, value|
@@ -64,22 +80,6 @@ describe 'splunkforwarder' do
         )
       }
     end
-    it {
-      is_expected.to contain_exec('splunkforwarder_license').with(
-        path: "#{home_path}/bin",
-        command: 'splunk start --accept-license --answer-yes --no-prompt',
-        creates: '/opt/splunkforwarder/etc/auth/server.pem',
-        timeout: 0,
-      )
-    }
-    it {
-      is_expected.to contain_exec('enable_splunkforwarder').with(
-        path: "#{home_path}/bin",
-        command: 'splunk enable boot-start -user splunk',
-        creates: '/etc/init.d/splunk',
-        require: 'Exec[splunkforwarder_license]',
-      )
-    }
     it { is_expected.to contain_service('splunk').with(ensure: 'running', enable: true) }
   end
   context 'with package_ensure => absent' do

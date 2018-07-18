@@ -37,19 +37,4 @@ class splunkforwarder::config inherits splunkforwarder {
       require => File[$splunkforwarder::log_dir],
     }
   }
-  # enable splunkforwarder
-  exec { 'splunkforwarder_license':
-    path    => "${splunkforwarder::home_dir}/bin",
-    command => 'splunk start --accept-license --answer-yes --no-prompt',
-    creates => '/opt/splunkforwarder/etc/auth/server.pem',
-    timeout => 0,
-    require => Class['::splunkforwarder::install'],
-  }
-  # create init file
-  exec { 'enable_splunkforwarder':
-    path    => "${splunkforwarder::home_dir}/bin",
-    command => "splunk enable boot-start -user ${splunkforwarder::user}",
-    creates => '/etc/init.d/splunk',
-    require => Exec['splunkforwarder_license'],
-  }
 }
