@@ -58,6 +58,7 @@ class splunkforwarder (
   String $local_server        = $::hostname,
   String $web_name            = 'splunkweb',
   String $user                = 'splunk',
+  String $group               = 'splunk',
   String $database            = '/home/build/build-home/ivory/var/lib/splunk',
   Boolean $enable_db          = false,
   String $source_root         = "/tmp/${package_name}.rpm",

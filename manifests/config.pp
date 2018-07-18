@@ -6,8 +6,8 @@ class splunkforwarder::config inherits splunkforwarder {
   # defaults
   File {
     ensure                  => $splunkforwarder::config_ensure,
-    owner                   => 'splunk',
-    group                   => 'splunk',
+    owner                   => $splunkforwarder::user,
+    group                   => $splunkforwarder::group,
     selinux_ignore_defaults => true,
   }
   # directories

@@ -13,6 +13,7 @@ describe 'splunkforwarder' do
   log_dir = "#{home_path}/var/log/splunk"
   log_files = ['audit', 'btool', 'conf', 'splunkd', 'splunkd_access', 'mongod', 'scheduler']
   config_dir = "#{home_path}/etc/system/local"
+
   context 'with default parameters' do
     # compilation checking
     it { is_expected.to compile }
@@ -36,6 +37,8 @@ describe 'splunkforwarder' do
         command: 'splunk start --accept-license --answer-yes --no-prompt',
         creates: '/opt/splunkforwarder/etc/auth/server.pem',
         timeout: 0,
+        subscribe: 'Package[splunkforwarder]',
+        notify: 'Exec[enable_splunkforwarder]',
       )
     }
     it {
@@ -43,7 +46,13 @@ describe 'splunkforwarder' do
         path: "#{home_path}/bin",
         command: 'splunk enable boot-start -user splunk',
         creates: '/etc/init.d/splunk',
-        require: 'Exec[splunkforwarder_license]',
+        notify: 'Exec[splunk_permission]'
+      )
+    }
+    it {
+      is_expected.to contain_exec('splunk_permission').with(
+        command: "chown -R splunk:splunk #{home_path}/*",
+        creates: home_path,
       )
     }
     it { is_expected.to contain_file(home_path).with_ensure('directory') }
@@ -140,5 +149,21 @@ describe 'splunkforwarder' do
     end
 
     it { is_expected.to contain_file("#{home_path}/etc/splunk-launch.conf").with_content(%r{^SPLUNK_SERVER_NAME[=]splunk}) }
+  end
+  context 'with user and group => root' do 
+    let :params do 
+      { user: 'root', group: 'root' }
+    end
+      # splunk user permission
+      it { is_expected.to contain_exec('splunk_permission').with(command: "chown -R root:root #{home_path}/*", creates: home_path) }
+      it { is_expected.to contain_file(home_path).with(owner: 'root', group:'root') }
+      it { is_expected.to contain_file(log_dir).with(owner: 'root', group:'root') }
+      config_files.each do |key, _value|
+        it { is_expected.to contain_file("#{config_dir}/#{key}").with(owner: 'root', group:'root') }
+      end
+      it { is_expected.to contain_file("#{home_path}/etc/splunk-launch.conf").with(owner: 'root', group:'root', content: %r{^SPLUNK_OS_USER[=]root$}) }
+      log_files.each do |key|
+        it { is_expected.to contain_file("#{log_dir}/#{key}.log").with(owner: 'root', group:'root') }
+      end
   end
 end

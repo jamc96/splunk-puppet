@@ -16,12 +16,20 @@ class splunkforwarder::install inherits splunkforwarder {
     creates   => '/opt/splunkforwarder/etc/auth/server.pem',
     timeout   => 0,
     subscribe => Package[$splunkforwarder::package_name],
+    notify    => Exec['enable_splunkforwarder'],
   }
   # create init file
   exec { 'enable_splunkforwarder':
     path    => "${splunkforwarder::home_dir}/bin",
     command => "splunk enable boot-start -user ${splunkforwarder::user}",
     creates => '/etc/init.d/splunk',
-    require => Exec['splunkforwarder_license'],
+    notify  => Exec['splunk_permission'],
+  }
+  # add permission to splunk files
+  exec { 'splunk_permission':
+    command     => "chown -R ${splunkforwarder::user}:${splunkforwarder::group} ${splunkforwarder::home_dir}/*",
+    refreshonly => true,
+    creates     => $splunkforwarder::home_dir,
+    path        => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
   }
 }
