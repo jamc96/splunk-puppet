@@ -10,28 +10,28 @@ class splunkforwarder::config inherits splunkforwarder {
     group                   => 'splunk',
     selinux_ignore_defaults => true,
   }
+  # directories
+  file {
+    $splunkforwarder::home_dir:
+      ensure => $splunkforwarder::directory_ensure;
+    $splunkforwarder::log_dir:
+      ensure => $splunkforwarder::directory_ensure,
+  }
   # main config files
   ['inputs.conf', 'outputs.conf', 'web.conf', 'limits.conf'].each |$key| {
-    file { $key:
-      path    => "${splunkforwarder::config_dir}/${key}",
+    file { "${splunkforwarder::config_dir}/${key}":
       content => template("${module_name}/conf.d/${key}.erb"),
     }
   }
   file {
-    'server.conf':
+    "${splunkforwarder::config_dir}/server.conf":
       path  => "${splunkforwarder::config_dir}/server.conf";
-    'splunk-launch.conf':
-      path    => "${splunkforwarder::home_dir}/etc/splunk-launch.conf",
+    "${splunkforwarder::home_dir}/etc/splunk-launch.conf":
       content => template("${module_name}/conf.d/splunk-launch.conf.erb");
-  }
-  # Log directory
-  file { $splunkforwarder::log_dir:
-    ensure => directory,
   }
   # log files
   $splunkforwarder::log_files.each |String $files| {
-    file{ $files:
-      path    => "${splunkforwarder::log_dir}/${files}.log",
+    file{ "${splunkforwarder::log_dir}/${files}.log":
       mode    => $splunkforwarder::log_files_mode,
       require => File[$splunkforwarder::log_dir],
     }

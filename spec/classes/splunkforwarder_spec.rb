@@ -1,8 +1,19 @@
 require 'spec_helper'
 describe 'splunkforwarder' do
+  # default variables
+  home_path = '/opt/splunkforwarder'
+  conf_path = "#{home_path}/etc/system/local"
+  config_files = {
+    'inputs.conf' => { 'content' => %r{^host[=]?[a-z]+$} },
+    'outputs.conf' => { 'content' => %r{^[#]\s+File\s+Managed\s+by\s+Puppet$} },
+    'web.conf' => { 'content' => %r{^[#]\s+File\s+Managed\s+by\s+Puppet$} },
+    'limits.conf' => { 'content' => %r{^[#]\s+File\s+Managed\s+by\s+Puppet$} },
+    'server.conf' => {},
+  }
+  log_dir = "#{home_path}/var/log/splunk"
+  log_files = ['audit', 'btool', 'conf', 'splunkd', 'splunkd_access', 'mongod', 'scheduler']
+  config_dir = "#{home_path}/etc/system/local"
   context 'with default parameters' do
-    let(:facts) { { hostname: 'foo' } }
-
     # compilation checking
     it { is_expected.to compile }
     it { is_expected.to compile.with_all_deps }
@@ -11,17 +22,6 @@ describe 'splunkforwarder' do
     it { is_expected.to contain_class('splunkforwarder::install') }
     it { is_expected.to contain_class('splunkforwarder::config') }
     it { is_expected.to contain_class('splunkforwarder::service') }
-    # default variables
-    home_path = '/opt/splunkforwarder'
-    conf_path = "#{home_path}/etc/system/local"
-    config_files = {
-      'inputs.conf' => { 'content' => %r{^host[=]?[a-z]+$} },
-      'outputs.conf' => { 'content' => %r{^[#]\s+File\s+Managed\s+by\s+Puppet$} },
-      'web.conf' => { 'content' => %r{^[#]\s+File\s+Managed\s+by\s+Puppet$} },
-      'limits.conf' => { 'content' => %r{^[#]\s+File\s+Managed\s+by\s+Puppet$} },
-      'server.conf' => {},
-    }
-    log_dir = "#{home_path}/var/log/splunk"
     # validate resources
     it {
       is_expected.to contain_package('splunkforwarder').with(
@@ -30,9 +30,11 @@ describe 'splunkforwarder' do
         provider: 'rpm',
       )
     }
+    it { is_expected.to contain_file(home_path).with_ensure('directory') }
+    it { is_expected.to contain_file(log_dir).with_ensure('directory') }
     config_files.each do |key, value|
       it {
-        is_expected.to contain_file(key).with(
+        is_expected.to contain_file("#{config_dir}/#{key}").with(
           ensure: 'present',
           owner: 'splunk',
           group: 'splunk',
@@ -43,7 +45,7 @@ describe 'splunkforwarder' do
       }
     end
     it {
-      is_expected.to contain_file('splunk-launch.conf')
+      is_expected.to contain_file("#{home_path}/etc/splunk-launch.conf")
         .with(ensure: 'present', owner: 'splunk', group: 'splunk', path: "#{home_path}/etc/splunk-launch.conf")
         .with_content(%r{^[#]\s+Version\s+\d+}) \
         .with_content(%r{^SPLUNK_HOME[=]?\/?[a-z]+\/?[a-z]+$}) \
@@ -51,14 +53,12 @@ describe 'splunkforwarder' do
         .with_content(%r{^SPLUNK_WEB_NAME[=]?[a-z]+$}) \
         .with_content(%r{^SPLUNK_OS_USER[=]?[a-z]+$}) \
     }
-    it { is_expected.to contain_file(log_dir).with_ensure('directory') }
-    ['audit', 'btool', 'conf', 'splunkd', 'splunkd_access', 'mongod', 'scheduler'].each do |key|
+    log_files.each do |key|
       it {
-        is_expected.to contain_file(key).with(
+        is_expected.to contain_file("#{log_dir}/#{key}.log").with(
           ensure: 'present',
           owner: 'splunk',
           group: 'splunk',
-          path: "#{log_dir}/#{key}.log",
           mode: '0700',
           require: "File[#{log_dir}]",
         )
@@ -81,5 +81,38 @@ describe 'splunkforwarder' do
       )
     }
     it { is_expected.to contain_service('splunk').with(ensure: 'running', enable: true) }
+  end
+  context 'with package_ensure => absent' do
+    let :params do { package_ensure: 'absent' } end
+
+    it { is_expected.to contain_package('splunkforwarder').with_ensure('absent') }
+  end
+  context 'with server => www.splunk.com' do
+    let :params do { server: 'www.splunk.com' } end
+    
+    it {
+      is_expected.to contain_file("#{home_path}/etc/splunk-launch.conf")
+        .with(ensure: 'present', owner: 'splunk', group: 'splunk', path: "#{home_path}/etc/splunk-launch.conf")
+        .with_content(%r{^SPLUNK_SERVER_NAME[=]www.splunk.com}) \
+    }
+  end
+  context 'with log_files_mode => 0775' do 
+    let :params do  { log_files_mode: '0775' } end
+
+    log_files.each do |key|
+      it { is_expected.to contain_file("#{log_dir}/#{key}.log").with_mode('0775') }
+    end
+  end
+  context 'with config_ensure => absent' do
+    let :params do { config_ensure: 'absent' } end
+    
+    it { is_expected.to contain_file(home_path).with_ensure('absent') }
+    it { is_expected.to contain_file(log_dir).with_ensure('absent') }
+    config_files.each do |key, _value|
+      it { is_expected.to contain_file("#{config_dir}/#{key}").with_ensure('absent') }
+    end
+    log_files.each do |key|
+      it { is_expected.to contain_file("#{log_dir}/#{key}.log").with_ensure('absent') }
+    end
   end
 end

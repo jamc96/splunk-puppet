@@ -46,7 +46,6 @@ class splunkforwarder (
   String $package_name        = 'splunkforwarder',
   String $package_ensure      = 'present',
   String $user                = 'splunk',
-  String $port                = '9997',
   String $server              = 'splunkforwarder',
   String $version             = '6.5.1',
   String $local_server        = $::hostname,
@@ -64,6 +63,11 @@ class splunkforwarder (
   Boolean $enable_db          = false,
   String $source_root         = "/tmp/${package_name}.rpm",
   ){
+  # default variables
+  $directory_ensure = $splunkforwarder::config_ensure ? {
+    'present' => 'directory',
+    default => $splunkforwarder::config_ensure,
+  }
   # module containment
   contain ::splunkforwarder::install
   contain ::splunkforwarder::config
