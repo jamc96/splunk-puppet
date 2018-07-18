@@ -6,8 +6,8 @@ describe 'splunkforwarder' do
   config_files = {
     'inputs.conf' => { 'content' => %r{^host[=]?[a-z]+$} },
     'outputs.conf' => { 'content' => %r{^[#]\s+File\s+Managed\s+by\s+Puppet$} },
-    'web.conf' => { 'content' => %r{^[#]\s+File\s+Managed\s+by\s+Puppet$} },
-    'limits.conf' => { 'content' => %r{^[#]\s+File\s+Managed\s+by\s+Puppet$} },
+    'web.conf' => { 'content' => %r{^[#]File\s+Managed\s+by\s+Puppet} },
+    'limits.conf' => { 'content' => %r{^[#]\s+File\s+Managed\s+by\s+Puppet} },
     'server.conf' => {},
   }
   log_dir = "#{home_path}/var/log/splunk"
