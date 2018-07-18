@@ -45,14 +45,7 @@ describe 'splunkforwarder' do
       is_expected.to contain_exec('enable_splunkforwarder').with(
         path: "#{home_path}/bin",
         command: 'splunk enable boot-start -user splunk',
-        creates: '/etc/init.d/splunk',
-        notify: 'Exec[splunk_permission]'
-      )
-    }
-    it {
-      is_expected.to contain_exec('splunk_permission').with(
-        command: "chown -R splunk:splunk #{home_path}/*",
-        creates: home_path,
+        creates: '/etc/init.d/splunk'
       )
     }
     it { is_expected.to contain_file(home_path).with_ensure('directory') }
@@ -155,7 +148,6 @@ describe 'splunkforwarder' do
       { user: 'root', group: 'root' }
     end
       # splunk user permission
-      it { is_expected.to contain_exec('splunk_permission').with(command: "chown -R root:root #{home_path}/*", creates: home_path) }
       it { is_expected.to contain_file(home_path).with(owner: 'root', group:'root') }
       it { is_expected.to contain_file(log_dir).with(owner: 'root', group:'root') }
       config_files.each do |key, _value|
