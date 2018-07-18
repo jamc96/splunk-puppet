@@ -23,13 +23,13 @@ class splunkforwarder::install inherits splunkforwarder {
     path    => "${splunkforwarder::home_dir}/bin",
     command => "splunk enable boot-start -user ${splunkforwarder::user}",
     creates => '/etc/init.d/splunk',
-    notify  => Exec['splunk_permission'],
   }
   # add permission to splunk files
   exec { 'splunk_permission':
     command     => "chown -R ${splunkforwarder::user}:${splunkforwarder::group} ${splunkforwarder::home_dir}/*",
     refreshonly => true,
     creates     => $splunkforwarder::home_dir,
+    subscribe   => Exec['enable_splunkforwarder'],
     path        => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
   }
 }
