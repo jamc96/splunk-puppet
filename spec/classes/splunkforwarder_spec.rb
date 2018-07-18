@@ -59,7 +59,7 @@ describe 'splunkforwarder' do
           owner: 'splunk',
           group: 'splunk',
           path: "#{log_dir}/#{key}.log",
-          mode: '0775',
+          mode: '0700',
           require: "File[#{log_dir}]",
         )
       }

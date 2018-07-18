@@ -54,6 +54,8 @@ class splunkforwarder (
   String $config_dir          = "${home_dir}/etc/system/local",
   String $run_dir             = "${home_dir}/var/run",
   String $log_dir             = "${home_dir}/var/log/splunk",
+  Array $log_files            = ['audit','btool','conf','splunkd','splunkd_access','mongod','scheduler'],
+  String $log_files_mode      = '0700',
   String $config_ensure       = 'present',
   String $service_name        = 'splunk',
   String $service_ensure      = 'running',

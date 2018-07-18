@@ -29,10 +29,10 @@ class splunkforwarder::config inherits splunkforwarder {
     ensure => directory,
   }
   # log files
-  ['audit','btool','conf','splunkd','splunkd_access','mongod','scheduler'].each |String $files| {
+  $splunkforwarder::log_files.each |String $files| {
     file{ $files:
       path    => "${splunkforwarder::log_dir}/${files}.log",
-      mode    => '0775',
+      mode    => $splunkforwarder::log_files_mode,
       require => File[$splunkforwarder::log_dir],
     }
   }
