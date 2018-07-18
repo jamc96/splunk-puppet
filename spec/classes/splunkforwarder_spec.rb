@@ -83,13 +83,17 @@ describe 'splunkforwarder' do
     it { is_expected.to contain_service('splunk').with(ensure: 'running', enable: true) }
   end
   context 'with package_ensure => absent' do
-    let :params do { package_ensure: 'absent' } end
+    let :params do
+      { package_ensure: 'absent' }
+    end
 
     it { is_expected.to contain_package('splunkforwarder').with_ensure('absent') }
   end
   context 'with config_ensure => absent' do
-    let :params do { config_ensure: 'absent' } end
-    
+    let :params do
+      { config_ensure: 'absent' }
+    end
+
     it { is_expected.to contain_file(home_path).with_ensure('absent') }
     it { is_expected.to contain_file(log_dir).with_ensure('absent') }
     config_files.each do |key, _value|
@@ -100,31 +104,41 @@ describe 'splunkforwarder' do
       it { is_expected.to contain_file("#{log_dir}/#{key}.log").with_ensure('absent') }
     end
   end
-  context 'with log_files_mode => 0775' do 
-    let :params do  { log_files_mode: '0775' } end
+  context 'with log_files_mode => 0775' do
+    let :params do
+      { log_files_mode: '0775' }
+    end
 
     log_files.each do |key|
       it { is_expected.to contain_file("#{log_dir}/#{key}.log").with_mode('0775') }
     end
   end
   context 'with service_ensure => stopped' do
-    let :params do { service_ensure: 'stopped' } end
+    let :params do
+      { service_ensure: 'stopped' }
+    end
 
     it { is_expected.to contain_service('splunk').with_ensure('stopped') }
   end
   context 'with server => www.splunk.com' do
-    let :params do { server: 'www.splunk.com' } end
-    
+    let :params do
+      { server: 'www.splunk.com' }
+    end
+
     it { is_expected.to contain_file("#{home_path}/etc/splunk-launch.conf").with_content(%r{^SPLUNK_SERVER_NAME[=]www.splunk.com}) }
   end
   context 'with local_server => bar' do
-    let :params do { local_server: 'bar' } end
-    
+    let :params do
+      { local_server: 'bar' }
+    end
+
     it { is_expected.to contain_file("#{config_dir}/inputs.conf").with_content(%r{^host[=]bar}) }
   end
   context 'with web_name => splunk' do
-    let :params do { web_name: 'splunk' } end
-    
+    let :params do
+      { web_name: 'splunk' }
+    end
+
     it { is_expected.to contain_file("#{home_path}/etc/splunk-launch.conf").with_content(%r{^SPLUNK_SERVER_NAME[=]splunk}) }
   end
 end
