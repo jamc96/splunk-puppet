@@ -15,7 +15,8 @@ class splunkforwarder::config inherits splunkforwarder {
     $splunkforwarder::home_dir:
       ensure => $splunkforwarder::directory_ensure;
     $splunkforwarder::log_dir:
-      ensure => $splunkforwarder::directory_ensure,
+      ensure  => $splunkforwarder::directory_ensure,
+      require => File[$splunkforwarder::home_dir];
   }
   # main config files
   ['inputs.conf', 'outputs.conf', 'web.conf', 'limits.conf'].each |$key| {
