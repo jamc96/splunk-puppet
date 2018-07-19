@@ -37,14 +37,19 @@ class splunkforwarder::config inherits splunkforwarder {
     creates => '/etc/init.d/splunk',
   }
   # log dir
-  file { $splunkforwarder::log_dir:
-    ensure  => $splunkforwarder::directory_ensure,
-    require => Exec['splunkforwarder_license'],
+  file { 
+    $splunkforwarder::config_dir:
+      ensure => $splunkforwarder::directory_ensure,
+      require => Exec['splunkforwarder_license'];
+    $splunkforwarder::log_dir:
+      ensure  => $splunkforwarder::directory_ensure,
+      require => Exec['splunkforwarder_license'],
   }
   # main config files
   ['inputs.conf', 'outputs.conf', 'web.conf', 'limits.conf'].each |$key| {
     file { "${splunkforwarder::config_dir}/${key}":
       content => template("${module_name}/conf.d/${key}.erb"),
+      require => File[$splunkforwarder::config_dir],
     }
   }
   # log files
