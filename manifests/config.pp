@@ -36,7 +36,7 @@ class splunkforwarder::config inherits splunkforwarder {
     command => "splunk enable boot-start -user ${splunkforwarder::user}",
     creates => '/etc/init.d/splunk',
   }
-  # log directory
+  # log dir
   file { $splunkforwarder::log_dir:
     ensure  => $splunkforwarder::directory_ensure,
     require => Exec['splunkforwarder_license'],
