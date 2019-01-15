@@ -23,7 +23,7 @@ class splunkforwarder::config inherits splunkforwarder {
   # accept license terms and create directories
   exec { 'splunkforwarder_license':
     path      => "${splunkforwarder::home_dir}/bin",
-    command   => 'splunk start --accept-license --answer-yes --no-prompt',
+    command   => "splunk start --accept-license --answer-yes --no-prompt --seed-passwd ${splunkforwarder::password}",
     creates   => '/opt/splunkforwarder/etc/auth/server.pem',
     timeout   => 0,
     subscribe => Package[$splunkforwarder::package_name],
@@ -37,9 +37,9 @@ class splunkforwarder::config inherits splunkforwarder {
     creates => '/etc/init.d/splunk',
   }
   # log dir
-  file { 
+  file {
     $splunkforwarder::config_dir:
-      ensure => $splunkforwarder::directory_ensure,
+      ensure  => $splunkforwarder::directory_ensure,
       require => Exec['splunkforwarder_license'];
     $splunkforwarder::log_dir:
       ensure  => $splunkforwarder::directory_ensure,

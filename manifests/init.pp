@@ -62,6 +62,7 @@ class splunkforwarder (
   String $database            = '/home/build/build-home/ivory/var/lib/splunk',
   Boolean $enable_db          = false,
   String $source_root         = "/tmp/${package_name}.rpm",
+  String $password            = 'admin',
   ){
   # default variables
   $directory_ensure = $splunkforwarder::config_ensure ? {
