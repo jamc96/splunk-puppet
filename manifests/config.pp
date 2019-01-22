@@ -38,6 +38,7 @@ class splunkforwarder::config inherits splunkforwarder {
     path    => "${splunkforwarder::home_dir}/bin",
     command => "splunk enable boot-start -user ${splunkforwarder::user}",
     creates => '/etc/init.d/splunk',
+    returns => [0,8],
   }
   # log dir
   file {
