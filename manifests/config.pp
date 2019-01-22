@@ -10,10 +10,13 @@ class splunkforwarder::config inherits splunkforwarder {
     group                   => $splunkforwarder::group,
     selinux_ignore_defaults => true,
   }
-  # main directory
-  file {  $splunkforwarder::home_dir:
-      ensure => $splunkforwarder::directory_ensure,
+  # main directories
+  [$splunkforwarder::home_dir, $splunkforwarder::apps_dir].each |$dir| {
+    file { $dir:
+      ensure => $splunkforwarder::directory_ensure;
+    }
   }
+  # configuration files
   file {
     "${splunkforwarder::config_dir}/server.conf":
       path  => "${splunkforwarder::config_dir}/server.conf";
@@ -57,6 +60,15 @@ class splunkforwarder::config inherits splunkforwarder {
     file{ "${splunkforwarder::log_dir}/${files}.log":
       mode    => $splunkforwarder::log_files_mode,
       require => File[$splunkforwarder::log_dir],
+    }
+  }
+  # application settings
+  if $splunkforwarder::app_source {
+    $splunkforwarder::app { 'splunkforwarder_apps':
+      source => $splunkforwarder::app_source,
+      path   => $splunkforwarder::apps_dir,
+      user   => $splunkforwarder::user,
+      group  => $splunkforwarder::group,
     }
   }
 }
