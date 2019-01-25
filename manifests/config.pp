@@ -21,24 +21,23 @@ class splunkforwarder::config inherits splunkforwarder {
     "${splunkforwarder::config_dir}/server.conf":
       path  => "${splunkforwarder::config_dir}/server.conf";
     "${splunkforwarder::home_dir}/etc/splunk-launch.conf":
-      content => template("${module_name}/conf.d/splunk-launch.conf.erb");
+      content => template("${module_name}/conf.d/splunk-launch.conf.erb"),
+      notify  => Exec['splunkforwarder_license'];
   }
   # accept license terms and create directories
   exec { 'splunkforwarder_license':
-    path      => "${splunkforwarder::home_dir}/bin",
-    command   => "splunk start --accept-license --answer-yes --no-prompt --seed-passwd ${splunkforwarder::password}",
-    creates   => '/opt/splunkforwarder/etc/auth/server.pem',
-    timeout   => 0,
-    subscribe => Package[$splunkforwarder::package_name],
-    require   => File["${splunkforwarder::home_dir}/etc/splunk-launch.conf"],
-    notify    => Exec['enable_splunkforwarder'],
+    path        => "${splunkforwarder::home_dir}/bin",
+    command     => "splunk start --accept-license --answer-yes --no-prompt --seed-passwd ${splunkforwarder::password}",
+    subscribe   => Package[$splunkforwarder::package_name],
+    notify      => Exec['enable_splunkforwarder'],
+    refreshonly => true,
   }
   # create init file
   exec { 'enable_splunkforwarder':
-    path    => "${splunkforwarder::home_dir}/bin",
-    command => "splunk enable boot-start -user ${splunkforwarder::user}",
-    creates => '/etc/init.d/splunk',
-    returns => [0,8],
+    path        => "${splunkforwarder::home_dir}/bin",
+    command     => "splunk enable boot-start -user ${splunkforwarder::user}",
+    refreshonly => true,
+    returns     => [0,8],
   }
   # log dir
   file {
@@ -64,12 +63,11 @@ class splunkforwarder::config inherits splunkforwarder {
     }
   }
   # application settings
-  if $splunkforwarder::app_source {
-    $splunkforwarder::app { 'splunkforwarder_apps':
-      source => $splunkforwarder::app_source,
-      path   => $splunkforwarder::apps_dir,
-      user   => $splunkforwarder::user,
-      group  => $splunkforwarder::group,
+  $splunkforwarder::applications.each |$app, $configs| {
+    splunkforwarder::app { $app:
+      path    => $splunkforwarder::apps_dir,
+      *       => $configs,
+      require => File[$splunkforwarder::apps_dir],
     }
   }
 }

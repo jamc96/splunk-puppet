@@ -6,25 +6,32 @@
 #   splunkforwarder::app { 'namevar': }
 define splunkforwarder::app(
   String $path,
-  Optional[Pattern[/^(puppet\:|https?\:|\/)/]] $source = undef,
   Enum['present','absent'] $ensure = 'present',
-  String $user  = 'splunk',
-  String $group = 'splunk',
+  String $user                     = 'splunk',
+  String $group                    = 'splunk',
+  Hash $configurations             = {},
+  Hash $deploymentclient           = {},
+  Hash $localmeta                  = {},
 ) {
-  if $source {
-    # get the name of the source. Last element of string
-    $source_name =  $source.split('/')[-1]
-    # decompress file
-    archive { $source_name:
-      ensure       => $ensure,
-      path         => "${path}/${source_name}",
-      source       => $source,
-      extract      => true,
-      extract_path => $path,
-      cleanup      => false,
-      user         => $user,
-      group        => $group,
-      require      => File[$path],
+  File {
+    ensure => 'present',
+    owner  => $user,
+    group  => $group,
+    mode   => '0755',
+  }
+  # concat path
+  $application_path = "${path}/${name}"
+  # creating default directories
+  [$application_path, "${application_path}/local", "${application_path}/metadata"].each |$dir| {
+    file { $dir:
+      ensure => 'directory',
     }
   }
+  # setting up configurations
+  # app.conf settings
+  create_ini_settings($configurations, { 'path' => "${application_path}/local/app.conf" } )
+  # deploymentclient.conf settings
+  create_ini_settings($deploymentclient, { 'path' => "${application_path}/local/deploymentclient.conf" } )
+  # local.meta settings
+  create_ini_settings($localmeta, { 'path' => "${application_path}/metadata/local.meta" } )
 }

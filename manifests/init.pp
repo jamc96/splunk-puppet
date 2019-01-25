@@ -43,9 +43,8 @@
 # Copyright 2017 Your name here, unless otherwise noted.
 #
 class splunkforwarder (
+  Variant[Enum['present','absent'], Pattern[/^[.+_0-9:~-]+(\-\w+)?$/]] $version = 'present',
   String $package_name                      = 'splunkforwarder',
-  Enum['present','absent'] $package_ensure  = 'present',
-  String $version                           = '6.5.1',
   Enum['present','absent'] $config_ensure   = 'present',
   String $home_dir                          = '/opt/splunkforwarder',
   String $config_dir                        = "${home_dir}/etc/system/local",
@@ -62,14 +61,26 @@ class splunkforwarder (
   String $group                             = 'splunk',
   String $database                          = '/home/build/build-home/ivory/var/lib/splunk',
   Boolean $enable_db                        = false,
-  String $source_root                       = "/tmp/${package_name}.rpm",
+  String $source_root                       = "/tmp/${package_name}-${version}",
   String $password                          = 'admin',
-  Optional[String] $app_source              = undef,
+  Hash $applications                        = {},
   ){
   # default variables
-  $directory_ensure = $splunkforwarder::config_ensure ? {
+  $directory_ensure = $config_ensure ? {
     'present' => 'directory',
     default => $splunkforwarder::config_ensure,
+  }
+  case $facts['os']['family'] {
+    'Debian': {
+      $package_ensure = 'present'
+      $package_provider = 'dpkg'
+      $package_source = "/tmp/${package_name}-${version}.deb"
+    }
+    default: {
+      $package_ensure = $version
+      $package_provider = 'rpm'
+      $package_source = $source_root
+    }
   }
   # module containment
   contain ::splunkforwarder::install

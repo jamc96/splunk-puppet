@@ -10,5 +10,9 @@ class splunkforwarder::service inherits splunkforwarder {
     enable     => true,
     hasstatus  => true,
     hasrestart => true,
+    start      => "${splunkforwarder::home_dir}/bin/splunk start",
+    stop       => "${splunkforwarder::home_dir}/bin/splunk stop",
+    status     => "${splunkforwarder::home_dir}/bin/splunk status",
+    restart    => "${splunkforwarder::home_dir}/bin/splunk restart",
   }
 }

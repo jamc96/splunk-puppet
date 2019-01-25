@@ -4,9 +4,21 @@
 #
 class splunkforwarder::install inherits splunkforwarder {
   # splunk package
-  package { $splunkforwarder::package_name:
+  if $splunkforwarder::package_provider == 'dpkg' {
+    # download package
+    file { $splunkforwarder::package_source:
+      ensure => 'file',
+      owner  => 0,
+      group  => 0,
+      mode   => '0644',
+      source => $splunkforwarder::source_root,
+      notify => Package['splunkforwarder'],
+    }
+  }
+  # install package
+  package { 'splunkforwarder':
     ensure   => $splunkforwarder::package_ensure,
-    source   => $splunkforwarder::source_root,
-    provider => 'rpm',
+    source   => $splunkforwarder::package_source,
+    provider => $splunkforwarder::package_provider,
   }
 }
