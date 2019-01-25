@@ -1,6 +1,4 @@
 # File Managed by Puppet
-#   Version <%= @version %>
-
 # Modify the following line to suit the location of your Splunk install.
 # If unset, Splunk will use the parent of the directory containing the splunk
 # CLI executable.
@@ -16,7 +14,6 @@ SPLUNK_DB=<%= @database%>
 # SPLUNK_DB=/home/build/build-home/ivory/var/lib/splunk
 <% end %>
 # Splunkd daemon name
-SPLUNK_SERVER_NAME=<%= @server %>
 
 # Splunkweb daemon name
 SPLUNK_WEB_NAME=<%= @web_name %>
@@ -26,4 +23,6 @@ SPLUNK_WEB_NAME=<%= @web_name %>
 # is, or can effectively become via setuid(2), $SPLUNK_OS_USER.
 # (This setting can be specified as username or as UID.)
 #
+# SPLUNK_OS_USER
+SPLUNK_SERVER_NAME=<%= @server %>
 SPLUNK_OS_USER=<%= @user %>
