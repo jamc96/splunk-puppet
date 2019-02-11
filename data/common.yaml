@@ -18,7 +18,7 @@ splunkforwarder::log_files:
 splunkforwarder::log_files_mode: '0700'
 splunkforwarder::service_ensure: 'running'
 splunkforwarder::server: 'splunkforwarder'
-splunkforwarder::local_server: %{::hostname}
+splunkforwarder::local_server: "%{::hostname}"
 splunkforwarder::web_name: 'splunkweb'
 splunkforwarder::user: 'splunk'
 splunkforwarder::group: 'splunk'
@@ -26,4 +26,4 @@ splunkforwarder::database: '/home/build/build-home/ivory/var/lib/splunk'
 splunkforwarder::enable_db: false
 splunkforwarder::source_root: '/tmp/splunkforwarder'
 splunkforwarder::password: 'admin'
-splunkforwarder::applications: ~
+splunkforwarder::applications: {}
