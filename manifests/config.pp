@@ -25,7 +25,7 @@ class splunkforwarder::config inherits splunkforwarder {
       path  => "${splunkforwarder::config_dir}/server.conf";
     "${splunkforwarder::home_dir}/etc/splunk-launch.conf":
       content => template("${module_name}/conf.d/splunk-launch.conf.erb"),
-      notify  => Exec['splunkforwarder_license'];
+      notify  => Exec['enable_splunkforwarder'];
   }
   # accept license terms and create directories
   $accept_license = 'accept-license --answer-yes --no-prompt'
@@ -37,10 +37,10 @@ class splunkforwarder::config inherits splunkforwarder {
   file {
     $splunkforwarder::config_dir:
       ensure  => $splunkforwarder::directory_ensure,
-      require => Exec['splunkforwarder_license'];
+      require => Exec['enable_splunkforwarder'];
     $splunkforwarder::log_dir:
       ensure  => $splunkforwarder::directory_ensure,
-      require => Exec['splunkforwarder_license'],
+      require => Exec['enable_splunkforwarder'],
   }
   # main config files
   ['inputs.conf', 'outputs.conf', 'web.conf', 'limits.conf'].each |$key| {
