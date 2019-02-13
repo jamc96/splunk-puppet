@@ -45,6 +45,8 @@
 class splunkforwarder (
   Variant[Enum['present','absent'], Pattern[/^[.+_0-9:~-]+(\-\w+)?$/]] $version,
   String $package_name,
+  String $package_source,
+  String $package_provider,
   Enum['present','absent'] $config_ensure,
   String $home_dir,
   String $config_dir,
@@ -61,7 +63,6 @@ class splunkforwarder (
   String $group,
   String $database,
   Boolean $enable_db,
-  String $package_source,
   String $password,
   Hash $applications,
   ){
