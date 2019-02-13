@@ -34,6 +34,14 @@ class splunkforwarder::config inherits splunkforwarder {
     command => "splunk enable boot-start -user ${splunkforwarder::user} --${accept_license} --seed-passwd ${splunkforwarder::password}",
     returns => [0,8],
   }
+  # execute only when upgrade
+  $change_splunk_password = "runuser -l splunk -c '${splunkforwarder::home_dir}/bin/splunk edit user admin"
+  exec { 'set_splunk_password':
+    path      => '/usr/bin:/usr/sbin:/bin:/sbin',
+    command   => "${change_splunk_password} -password ${splunkforwarder::password} -auth admin:changeme'",
+    subscribe => Package[$splunkforwarder::package_name],
+    after     => Exec['enable_splunkforwarder'],
+  }
   # log dir
   file {
     $splunkforwarder::config_dir:
