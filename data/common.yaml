@@ -1,5 +1,5 @@
 ---
-splunkforwarder::version: 'present'
+splunkforwarder::version: '7.2.3-06d57c595b80'
 splunkforwarder::package_name: 'splunkforwarder'
 splunkforwarder::config_ensure: 'present'
 splunkforwarder::home_dir: '/opt/splunkforwarder'
@@ -24,6 +24,6 @@ splunkforwarder::user: 'splunk'
 splunkforwarder::group: 'splunk'
 splunkforwarder::database: '/home/build/build-home/ivory/var/lib/splunk'
 splunkforwarder::enable_db: false
-splunkforwarder::source_root: 'puppet:///modules/splunkforwarder/splunkforwarder-6.5.1-f74036626f0c-linux-x86_64.rpm'
+splunkforwarder::package_source: 'puppet:///modules/splunkforwarder/splunkforwarder-7.2.3-06d57c595b80-linux-2.6-x86_64.rpm'
 splunkforwarder::password: 'admin'
 splunkforwarder::applications: {}

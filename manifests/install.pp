@@ -11,14 +11,14 @@ class splunkforwarder::install inherits splunkforwarder {
       owner  => 0,
       group  => 0,
       mode   => '0644',
-      source => $splunkforwarder::source_root,
-      notify => Package['splunkforwarder'],
+      source => $splunkforwarder::package_source,
+      before => Package['splunkforwarder'],
     }
   }
   # install package
   package { 'splunkforwarder':
-    ensure   => $splunkforwarder::package_ensure,
-    source   => $splunkforwarder::package_source,
+    ensure   => $splunkforwarder::version,
+    source   => $splunkforwarder::source_installer,
     provider => $splunkforwarder::package_provider,
   }
 }

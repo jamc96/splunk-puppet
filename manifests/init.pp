@@ -61,7 +61,7 @@ class splunkforwarder (
   String $group,
   String $database,
   Boolean $enable_db,
-  String $source_root,
+  String $package_source,
   String $password,
   Hash $applications,
   ){
@@ -70,17 +70,9 @@ class splunkforwarder (
     'present' => 'directory',
     default => $splunkforwarder::config_ensure,
   }
-  case $facts['os']['family'] {
-    'Debian': {
-      $package_ensure = 'present'
-      $package_provider = 'dpkg'
-      $package_source = "/tmp/${package_name}-${version}.deb"
-    }
-    default: {
-      $package_ensure = $version
-      $package_provider = 'rpm'
-      $package_source = $source_root
-    }
+  $source_installer = $facts['os']['family'] ? {
+    'Debian' => "/tmp/${package_name}-${version}.deb",
+    default => $package_source,
   }
   # module containment
   contain ::splunkforwarder::install

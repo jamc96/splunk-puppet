@@ -1,2 +1,0 @@
----
-splunkforwarder::source_root: 'puppet:///modules/splunkforwarder/splunkforwarder-7.2.3-06d57c595b80-linux-2.6-x86_64.rpm'
