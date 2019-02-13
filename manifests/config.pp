@@ -10,6 +10,9 @@ class splunkforwarder::config inherits splunkforwarder {
     group                   => $splunkforwarder::group,
     selinux_ignore_defaults => true,
   }
+  Exec {
+    refreshonly => true,
+  }
   # main directories
   [$splunkforwarder::home_dir, $splunkforwarder::apps_dir].each |$dir| {
     file { $dir:
@@ -25,19 +28,10 @@ class splunkforwarder::config inherits splunkforwarder {
       notify  => Exec['splunkforwarder_license'];
   }
   # accept license terms and create directories
-  exec { 'splunkforwarder_license':
-    path        => "${splunkforwarder::home_dir}/bin",
-    command     => "splunk start --accept-license --answer-yes --no-prompt --seed-passwd ${splunkforwarder::password}",
-    subscribe   => Package[$splunkforwarder::package_name],
-    notify      => Exec['enable_splunkforwarder'],
-    refreshonly => true,
-  }
-  # create init file
+  $accept_license = 'accept-license --answer-yes --no-prompt'
   exec { 'enable_splunkforwarder':
-    path        => "${splunkforwarder::home_dir}/bin",
-    command     => "splunk enable boot-start -user ${splunkforwarder::user}",
-    refreshonly => true,
-    returns     => [0,8],
+    path    => "${splunkforwarder::home_dir}/bin",
+    command => "splunk enable boot-start -user ${splunkforwarder::user} --${accept_license} --seed-passwd ${splunkforwarder::password}",
   }
   # log dir
   file {

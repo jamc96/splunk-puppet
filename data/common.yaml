@@ -1,5 +1,5 @@
 ---
-splunkforwarder::version: '7.2.3-06d57c595b80'
+splunkforwarder::version: 'present'
 splunkforwarder::package_name: 'splunkforwarder'
 splunkforwarder::config_ensure: 'present'
 splunkforwarder::home_dir: '/opt/splunkforwarder'
@@ -17,13 +17,13 @@ splunkforwarder::log_files:
   - 'scheduler' 
 splunkforwarder::log_files_mode: '0700'
 splunkforwarder::service_ensure: 'running'
-splunkforwarder::server: 'splunkforwarder'
+splunkforwarder::server: 'splunkd'
 splunkforwarder::local_server: "%{::hostname}"
 splunkforwarder::web_name: 'splunkweb'
 splunkforwarder::user: 'splunk'
 splunkforwarder::group: 'splunk'
 splunkforwarder::database: '/home/build/build-home/ivory/var/lib/splunk'
 splunkforwarder::enable_db: false
-splunkforwarder::package_source: 'puppet:///modules/splunkforwarder/splunkforwarder-7.2.3-06d57c595b80-linux-2.6-x86_64.rpm'
+splunkforwarder::package_source: '/tmp/splunkforwarder'
 splunkforwarder::password: 'admin'
 splunkforwarder::applications: {}

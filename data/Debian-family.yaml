@@ -1,0 +1,2 @@
+---
+splunkforwarder::package_provider: 'dpkg'

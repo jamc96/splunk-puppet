@@ -1,3 +1,0 @@
----
-splunkforwarder::version: '6.5.1-f74036626f0c'
-splunkforwarder::package_source: 'puppet:///modules/splunkforwarder/splunkforwarder-6.5.1-f74036626f0c-linux-x86_64.rpm'
