@@ -9,9 +9,9 @@ define splunkforwarder::app(
   Enum['present','absent'] $ensure = 'present',
   String $user                     = 'splunk',
   String $group                    = 'splunk',
-  Hash $configurations             = {},
-  Hash $deploymentclient           = {},
-  Hash $localmeta                  = {},
+  Optional[Hash] $configurations   = undef,
+  Optional[Hash] $deploymentclient = undef,
+  Optional[Hash] $localmeta        = undef,
 ) {
   File {
     ensure => 'present',
@@ -29,9 +29,24 @@ define splunkforwarder::app(
   }
   # setting up configurations
   # app.conf settings
-  create_ini_settings($configurations, { 'path' => "${application_path}/local/app.conf" } )
+  if $configurations {
+    file { "${application_path}/local/app.conf":
+      require => File["${application_path}/local"],
+    }
+    create_ini_settings($configurations, { 'path' => "${application_path}/local/app.conf" } )
+  }
   # deploymentclient.conf settings
-  create_ini_settings($deploymentclient, { 'path' => "${application_path}/local/deploymentclient.conf" } )
+  if $deploymentclient {
+    file { "${application_path}/local/deploymentclient.conf":
+      require => File["${application_path}/local"],
+    }
+    create_ini_settings($deploymentclient, { 'path' => "${application_path}/local/deploymentclient.conf" } )
+  }
   # local.meta settings
-  create_ini_settings($localmeta, { 'path' => "${application_path}/metadata/local.meta" } )
+  if $localmeta {
+    file { "${application_path}/metadata/local.meta":
+      require => File["${application_path}/metadata"],
+    }
+    create_ini_settings($localmeta, { 'path' => "${application_path}/metadata/local.meta" } )
+  }
 }
