@@ -17,7 +17,7 @@ splunkforwarder::log_files:
   - 'scheduler' 
 splunkforwarder::log_files_mode: '0700'
 splunkforwarder::service_ensure: 'running'
-splunkforwarder::server: 'splunkd'
+splunkforwarder::server: 'splunk'
 splunkforwarder::local_server: "%{::hostname}"
 splunkforwarder::web_name: 'splunkweb'
 splunkforwarder::user: 'splunk'
