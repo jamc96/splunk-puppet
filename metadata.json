@@ -8,7 +8,10 @@
   "project_page": "https://github.com/jamc96/splunk-puppet.git",
   "issues_url": "https://github.com/jamc96/splunk-puppet/issues",
   "dependencies": [
-
+    {
+      "name": "puppetlabs/inifile",
+      "version_requirement": ">= 1.1.0 < 2.5.0"
+    }
   ],
   "operatingsystem_support": [
     {
