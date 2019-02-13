@@ -32,6 +32,7 @@ class splunkforwarder::config inherits splunkforwarder {
   exec { 'enable_splunkforwarder':
     path    => "${splunkforwarder::home_dir}/bin",
     command => "splunk enable boot-start -user ${splunkforwarder::user} --${accept_license} --seed-passwd ${splunkforwarder::password}",
+    returns => [0,8],
   }
   # log dir
   file {
