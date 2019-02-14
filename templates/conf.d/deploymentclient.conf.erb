@@ -5,8 +5,8 @@
 [<%= key %>]
 <% end -%>
 <% hash.each do |name, value| -%>
-<% if name == 'comment' -%>
-# <%= value %>
+<% if value.empty? -%>
+<%= name %>
 <% else -%>
 <%= name %> = <%= value %>
 <% end -%>
