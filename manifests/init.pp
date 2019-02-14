@@ -75,6 +75,11 @@ class splunkforwarder (
     'Debian' => "/tmp/${package_name}-${version}.deb",
     default => $package_source,
   }
+  $accept_license = 'accept-license --answer-yes --no-prompt'
+  $enable_splunkforwarder_cmd = $version ? {
+    /^6[.]/ => "splunk enable boot-start -user ${splunkforwarder::user} --${accept_license}",
+    default => "splunk enable boot-start -user ${splunkforwarder::user} --${accept_license} --seed-passwd ${splunkforwarder::password}",
+  }
   # module containment
   contain ::splunkforwarder::install
   contain ::splunkforwarder::config

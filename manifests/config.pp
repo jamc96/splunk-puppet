@@ -28,10 +28,9 @@ class splunkforwarder::config inherits splunkforwarder {
       notify  => Exec['enable_splunkforwarder'];
   }
   # accept license terms and create directories
-  $accept_license = 'accept-license --answer-yes --no-prompt'
   exec { 'enable_splunkforwarder':
     path    => "${splunkforwarder::home_dir}/bin",
-    command => "splunk enable boot-start -user ${splunkforwarder::user} --${accept_license} --seed-passwd ${splunkforwarder::password}",
+    command => $splunkforwarder::enable_splunkforwarder_cmd,
     returns => [0,8],
   }
   # log dir
