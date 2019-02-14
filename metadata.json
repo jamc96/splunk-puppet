@@ -1,6 +1,6 @@
 {
   "name": "jamc96-splunkforwarder",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "jamc96",
   "summary": "module to manage the splunkforwarder base setup",
   "license": "Apache-2.0",
@@ -8,10 +8,7 @@
   "project_page": "https://github.com/jamc96/splunk-puppet.git",
   "issues_url": "https://github.com/jamc96/splunk-puppet/issues",
   "dependencies": [
-    {
-      "name": "puppetlabs/inifile",
-      "version_requirement": ">= 1.1.0 < 3.0.0"
-    }
+
   ],
   "operatingsystem_support": [
     {
