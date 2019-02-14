@@ -38,15 +38,15 @@ define splunkforwarder::app(
   # deploymentclient.conf settings
   if $deploymentclient {
     file { "${application_path}/local/deploymentclient.conf":
+      content => template("${module_name}/conf.d/deploymentclient.conf.erb"),
       require => File["${application_path}/local"],
     }
-    create_ini_settings($deploymentclient, { 'path' => "${application_path}/local/deploymentclient.conf" } )
   }
   # local.meta settings
   if $localmeta {
     file { "${application_path}/metadata/local.meta":
+      content => template("${module_name}/conf.d/local.meta.erb"),
       require => File["${application_path}/metadata"],
     }
-    create_ini_settings($localmeta, { 'path' => "${application_path}/metadata/local.meta" } )
   }
 }

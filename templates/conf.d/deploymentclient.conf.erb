@@ -1,0 +1,7 @@
+# Managed by Puppet
+<% @deploymentclient.each do |key, hash| %>
+[<%= key %>]
+<% hash.each do |name, value| -%>
+<%= name %>=<%= value %>
+<% end -%>
+<% end -%>
