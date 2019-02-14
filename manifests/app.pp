@@ -17,7 +17,7 @@ define splunkforwarder::app(
     ensure => 'present',
     owner  => $user,
     group  => $group,
-    mode   => '0755',
+    mode   => '0600',
   }
   # concat path
   $application_path = "${path}/${name}"
@@ -25,6 +25,7 @@ define splunkforwarder::app(
   [$application_path, "${application_path}/local", "${application_path}/metadata"].each |$dir| {
     file { $dir:
       ensure => 'directory',
+      mode   => '0700',
     }
   }
   # setting up configurations
