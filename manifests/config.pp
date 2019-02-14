@@ -29,9 +29,10 @@ class splunkforwarder::config inherits splunkforwarder {
   }
   # accept license terms and create directories
   exec { 'enable_splunkforwarder':
-    path    => "${splunkforwarder::home_dir}/bin",
-    command => $splunkforwarder::enable_splunkforwarder_cmd,
-    returns => [0,8],
+    path      => "${splunkforwarder::home_dir}/bin",
+    command   => $splunkforwarder::enable_splunkforwarder_cmd,
+    subscribe => Package[$splunkforwarder::package_name],
+    returns   => [0,8],
   }
   # log dir
   file {
