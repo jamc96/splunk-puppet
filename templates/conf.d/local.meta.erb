@@ -1,6 +1,10 @@
 # Managed by Puppet
 <% @localmeta.each do |key, hash| %>
+<% if key == 'global' -%>
+[]
+<% else -%>
 [<%= key %>]
+<% end -%>
 <% hash.each do |name, value| -%>
 <%= name %>=<%= value %>
 <% end -%>
