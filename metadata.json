@@ -1,6 +1,6 @@
 {
   "name": "jamc96-splunkforwarder",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": "jamc96",
   "summary": "module to manage the splunkforwarder base setup",
   "license": "Apache-2.0",
