@@ -1,14 +1,14 @@
-<% @localmeta.each do |key, hash| %>
+<% @localmeta.each do |key, hash| -%>
 <% if key == 'global' -%>
 []
 <% else -%>
 [<%= key %>]
 <% end -%>
 <% hash.each do |name, value| -%>
-<% if value.empty? -%>
+<% if value.nil? -%>
 <%= name %>
 <% else -%>
 <%= name %> = <%= value %>
 <% end -%>
-<% end -%>
+<% end %>
 <% end -%>
