@@ -31,9 +31,9 @@ define splunkforwarder::app(
   # app.conf settings
   if $configurations {
     file { "${application_path}/local/app.conf":
+      content => template("${module_name}/conf.d/app.conf.erb"),
       require => File["${application_path}/local"],
     }
-    create_ini_settings($configurations, { 'path' => "${application_path}/local/app.conf" } )
   }
   # deploymentclient.conf settings
   if $deploymentclient {
